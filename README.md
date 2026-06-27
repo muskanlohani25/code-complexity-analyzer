@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg)](CHANGELOG.md)
+[![Deploy to Render](https://render.com/images/deploy-to-render.svg)](https://render.com/deploy?repo=https://github.com/muskanlohani25/code-complexity-analyzer)
 
 An advanced, developer-grade static analysis tool designed to audit C++ source code structures without compilation. Automatically estimates time and space complexities, computes McCabe's Cyclomatic Complexity, grades codebase metrics (Quality Score), scans for common code smells, and outputs download-ready JSON/PDF reports.
 
