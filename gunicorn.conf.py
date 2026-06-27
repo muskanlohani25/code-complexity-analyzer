@@ -8,8 +8,8 @@ bind = f"0.0.0.0:{port}"
 # Gunicorn configuration values
 backlog = 2048
 
-# Worker configurations (CPU count-based worker sizing)
-workers = multiprocessing.cpu_count() * 2 + 1
+# Worker configurations (Static worker size to prevent host CPU count explosion on cloud containers)
+workers = 2
 worker_class = 'sync'
 worker_connections = 1000
 timeout = 120
