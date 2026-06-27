@@ -7,7 +7,7 @@
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/muskanlohani25/code-complexity-analyzer)
 ![GitHub Issues](https://img.shields.io/github/issues/muskanlohani25/code-complexity-analyzer)
 ![GitHub Stars](https://img.shields.io/github/stars/muskanlohani25/code-complexity-analyzer?style=social)
-[![Deploy to Render](https://render.com/images/deploy-to-render.svg)](https://render.com/deploy?repo=https://github.com/muskanlohani25/code-complexity-analyzer)
+[![Deploy to Render](docs/images/deploy-to-render.svg)](https://render.com/deploy?repo=https://github.com/muskanlohani25/code-complexity-analyzer)
 
 An advanced, developer-grade static analysis tool designed to audit C++ source code structures without compilation. Automatically estimates time and space complexities, computes McCabe's Cyclomatic Complexity, grades codebase metrics (Quality Score), scans for common code smells, and outputs download-ready JSON/PDF reports.
 
