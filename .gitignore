@@ -1,0 +1,28 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments & Virtual Envs
+.venv/
+venv/
+ENV/
+env/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Editor Configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Testing caches
+.pytest_cache/
+.coverage
+htmlcov/

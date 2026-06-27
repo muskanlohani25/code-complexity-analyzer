@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Statically analyze C++ code complexity, quality scores, cyclomatic complexity, code smells, and download PDF reports instantly.">
+    <title>C++ Code Complexity Analyzer - Developer Edition</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <!-- html2pdf.js Library via secure CDN for client-side PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5IfSuxQTO8jryQS4ydacqjM37LB49cnPfVRYLDxLjFNxG6HCW1QX5S1COVuYBv5tJRZsdy13g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <!-- Glassmorphic Background Blur Orbs -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <!-- Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <a href="/" class="app-logo" id="nav-logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span>CodeComplexity<span class="logo-accent">.IO</span></span>
+            </a>
+            <nav class="app-nav">
+                <a href="#editor-section" class="nav-link">Analyzer</a>
+                <a href="#features-section" class="nav-link">Features</a>
+                <a href="https://github.com" target="_blank" class="nav-link github-link" id="nav-github-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section" id="features-section">
+            <div class="hero-container">
+                <span class="badge-pill">Developer Edition v1.1</span>
+                <h1 class="hero-title">Static Code & Complexity <span class="text-glow">Engine</span></h1>
+                <p class="hero-subtitle">Professional C++ static code analyzer. Estimate time & space bounds, measure cyclomatic complexity risk, inspect codebase quality metrics, detect structural smells, and export detailed PDF audits.</p>
+            </div>
+        </section>
+
+        <!-- Editor & Templates Section -->
+        <section class="workspace-section" id="editor-section">
+            <div class="workspace-container">
+                
+                <!-- Quick Templates Panel -->
+                <div class="templates-panel">
+                    <span class="templates-label">C++ Algorithmic Templates:</span>
+                    <div class="templates-buttons">
+                        <button type="button" class="btn-template" id="template-binary-search">Binary Search</button>
+                        <button type="button" class="btn-template" id="template-bubble-sort">Bubble Sort</button>
+                        <button type="button" class="btn-template" id="template-fibonacci">Recursive Fibonacci</button>
+                        <button type="button" class="btn-template" id="template-nested-loops">Matrix Multiply</button>
+                        <button type="button" class="btn-template" id="template-memoization">DP Grid Path</button>
+                    </div>
+                </div>
+
+                <!-- Code Editor Card -->
+                <div class="card editor-card">
+                    <div class="card-header editor-header">
+                        <div class="editor-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="editor-filename">analyzer_input.cpp</span>
+                        <span class="editor-lang-badge">C++17</span>
+                    </div>
+                    
+                    <div class="editor-workspace">
+                        <div class="line-gutter" id="line-gutter">1</div>
+                        <textarea class="editor-textarea" id="code-textarea" spellcheck="false" placeholder="// Paste your C++ algorithm here..."></textarea>
+                    </div>
+                    
+                    <div class="card-footer editor-actions">
+                        <span class="code-status-msg" id="status-message">Ready for developer-grade analysis.</span>
+                        <button type="button" class="btn-primary" id="btn-analyze">
+                            <span class="btn-text">Run Audit</span>
+                            <div class="spinner" id="analyze-spinner"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Toast Container -->
+                <div class="error-banner" id="error-banner" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="error-icon">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span id="error-text">An error occurred during analysis.</span>
+                </div>
+
+                <!-- Results Section (Hidden initially) -->
+                <div class="results-container" id="results-panel" style="display: none;">
+                    
+                    <!-- Floating Actions Bar (Export & Copy) -->
+                    <div class="actions-bar">
+                        <span class="actions-label">Audit Actions:</span>
+                        <div class="actions-buttons">
+                            <button type="button" class="btn-secondary" id="btn-copy">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                <span>Copy Summary</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="btn-export-json">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <span>Export JSON</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="btn-export-pdf">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                <span>Download PDF</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Code Quality Overall Score Dashboard Card -->
+                    <div class="card quality-score-card" id="print-quality-card">
+                        <div class="quality-grid">
+                            <!-- Circular Score Indicator -->
+                            <div class="circular-score-wrapper">
+                                <svg class="progress-ring" width="140" height="140">
+                                    <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.03)" stroke-width="10" fill="transparent" r="58" cx="70" cy="70"></circle>
+                                    <circle class="progress-ring-bar" id="score-circle-bar" stroke="url(#score-grad)" stroke-width="10" fill="transparent" r="58" cx="70" cy="70" stroke-linecap="round"></circle>
+                                    <defs>
+                                        <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#6366f1"></stop>
+                                            <stop offset="100%" stop-color="#a855f7"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="score-number">
+                                    <span class="score-value" id="overall-score-text">0</span>
+                                    <span class="score-label">Quality Score</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Linear Breakdown Parameters -->
+                            <div class="quality-bars-container">
+                                <h3 class="breakdown-title">Code Health Metrics</h3>
+                                <div class="quality-bar-item">
+                                    <div class="bar-header">
+                                        <span>Algorithmic Efficiency</span>
+                                        <span id="score-val-efficiency">0%</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill fill-efficiency" id="bar-fill-efficiency"></div>
+                                    </div>
+                                </div>
+                                <div class="quality-bar-item">
+                                    <div class="bar-header">
+                                        <span>Readability & Structure</span>
+                                        <span id="score-val-readability">0%</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill fill-readability" id="bar-fill-readability"></div>
+                                    </div>
+                                </div>
+                                <div class="quality-bar-item">
+                                    <div class="bar-header">
+                                        <span>Maintainability & Flow</span>
+                                        <span id="score-val-maintainability">0%</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill fill-maintainability" id="bar-fill-maintainability"></div>
+                                    </div>
+                                </div>
+                                <div class="quality-bar-item">
+                                    <div class="bar-header">
+                                        <span>Naming Conventions</span>
+                                        <span id="score-val-naming">0%</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill fill-naming" id="bar-fill-naming"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complexity Metrics Deck -->
+                    <div class="metrics-grid" id="print-metrics-grid">
+                        <!-- Time Complexity Card -->
+                        <div class="card metric-card time-card">
+                            <div class="metric-icon time-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Estimated Time Bounds</span>
+                                <div class="badge-combo">
+                                    <h2 class="metric-value" id="time-complexity-value">O(1)</h2>
+                                    <span class="confidence-badge" id="confidence-badge">98% Conf</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Space Complexity Card -->
+                        <div class="card metric-card space-card">
+                            <div class="metric-icon space-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Space Allocation</span>
+                                <h2 class="metric-value" id="space-complexity-value">O(1)</h2>
+                            </div>
+                        </div>
+
+                        <!-- Cyclomatic Complexity Card -->
+                        <div class="card metric-card cyclomatic-card">
+                            <div class="metric-icon cyclomatic-icon" id="cc-icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                                    <polyline points="9 10 12 13 15 10"></polyline>
+                                </svg>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Cyclomatic Complexity</span>
+                                <div class="badge-combo">
+                                    <h2 class="metric-value" id="cyclomatic-value">1</h2>
+                                    <span class="risk-badge badge-low" id="cyclomatic-risk-badge">Low Risk</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics & Patterns Split Row -->
+                    <div class="grid-split-row" id="print-split-row">
+                        <!-- Code Statistics Card -->
+                        <div class="card stats-card">
+                            <div class="card-header">
+                                <h3>Code Statistics</h3>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-lines-total">0</span>
+                                    <span class="stat-lbl">Total Lines</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-lines-code">0</span>
+                                    <span class="stat-lbl">Source Code Lines</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-lines-comments">0</span>
+                                    <span class="stat-lbl">Comment Lines</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-functions">0</span>
+                                    <span class="stat-lbl">Functions</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-loops">0</span>
+                                    <span class="stat-lbl">Loops Detected</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-recursion">0</span>
+                                    <span class="stat-lbl">Recursive Calls</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-ifs">0</span>
+                                    <span class="stat-lbl">If Statements</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-val" id="stat-variables">0</span>
+                                    <span class="stat-lbl">Variables declared</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detected Patterns Card -->
+                        <div class="card patterns-card">
+                            <div class="card-header">
+                                <h3>Common Patterns Identified</h3>
+                            </div>
+                            <div class="patterns-content">
+                                <div class="patterns-list" id="patterns-container">
+                                    <!-- Dynamic Badge pills -->
+                                </div>
+                                <div class="empty-state" id="patterns-empty-state" style="display: none;">
+                                    <p>No special algorithm or library patterns were identified.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complexity Walkthrough Explanation Card (Collapsible) -->
+                    <div class="card explanation-card collapsible-card" id="print-explanation-card">
+                        <div class="card-header collapsible-header" id="header-explanation">
+                            <h3>Complexity Explanation</h3>
+                            <button type="button" class="btn-toggle" aria-expanded="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="chevron-icon">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="explanation-content collapsible-body">
+                            <pre class="explanation-pre" id="complexity-explanation-text">Explanation trace...</pre>
+                        </div>
+                    </div>
+
+                    <!-- Code Smell Detection Card (Collapsible) -->
+                    <div class="card smells-card collapsible-card" id="print-smells-card">
+                        <div class="card-header collapsible-header" id="header-smells">
+                            <h3>Detected Code Smells</h3>
+                            <button type="button" class="btn-toggle" aria-expanded="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="chevron-icon">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="smells-content collapsible-body" id="smells-container">
+                            <!-- Dynamic Code Smells -->
+                        </div>
+                        <div class="no-smells-card collapsible-body" id="smells-empty-state" style="display: none;">
+                            <div class="success-icon green-glow">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="success-message">
+                                <h4>No code smells detected!</h4>
+                                <p>Static analyzer did not find any major architectural violations or standard code smells.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optimization Suggestions Card (Collapsible) -->
+                    <div class="card suggestions-card collapsible-card" id="print-suggestions-card">
+                        <div class="card-header collapsible-header" id="header-suggestions">
+                            <h3>Optimization Suggestions</h3>
+                            <button type="button" class="btn-toggle" aria-expanded="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="chevron-icon">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="suggestions-content collapsible-body" id="suggestions-container">
+                            <!-- Dynamic list items -->
+                        </div>
+                        <div class="no-suggestions-card collapsible-body" id="suggestions-empty-state" style="display: none;">
+                            <div class="success-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="success-message">
+                                <h4>Code looks optimal!</h4>
+                                <p>Static analyzer did not find any low-hanging optimization areas in this code block.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- End Results -->
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <span class="footer-copyright">&copy; 2026 CodeComplexity.IO. Structured for production.</span>
+            <div class="footer-links">
+                <span class="footer-badge">No Compiler Required</span>
+                <span class="footer-badge">Flask + Static analysis</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
