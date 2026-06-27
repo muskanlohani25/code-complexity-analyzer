@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: code-complexity-analyzer
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --config gunicorn.conf.py
+    envVars:
+      - key: PORT
+        value: 5001
+      - key: PYTHON_VERSION
+        value: 3.10.12
