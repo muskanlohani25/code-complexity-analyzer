@@ -54,11 +54,11 @@ Static complexity auditing is crucial for writing performant, readable, and main
 
 | Landing Page & Editor | Analysis Dashboard |
 | --- | --- |
-| ![Landing Page](https://via.placeholder.com/600x350/070a13/f1f5f9?text=Landing+Page+%26+Code+Editor) | ![Analysis Results](https://via.placeholder.com/600x350/070a13/f1f5f9?text=Analysis+Dashboard+%26+CC+Risks) |
+| ![Landing Page](docs/images/landing.png) | ![Analysis Results](docs/images/dashboard.png) |
 
 | Quality Metrics | Code Smells & Suggestions |
 | --- | --- |
-| ![Quality Scores](https://via.placeholder.com/600x350/070a13/f1f5f9?text=Circular+Score+Rings+%26+Linear+Meters) | ![Code Smells](https://via.placeholder.com/600x350/070a13/f1f5f9?text=Code+Smells+Card+%26+Remediation+Tips) |
+| ![Quality Scores](docs/images/quality.png) | ![Code Smells](docs/images/smells.png) |
 
 ---
 
