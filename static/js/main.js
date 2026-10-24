@@ -506,6 +506,12 @@ Generated via CodeComplexity.IO
     // 3. Download PDF Audit (using client-side html2pdf.js)
     btnExportPdf.addEventListener('click', () => {
         if (!lastAnalysisReport) return;
+
+        // Guard: ensure html2pdf.js loaded from CDN
+        if (typeof html2pdf === 'undefined') {
+            showError('PDF library failed to load. Please check your internet connection or disable ad-blockers, then refresh.');
+            return;
+        }
         
         // Hide the actions bar temporarily for PDF generation
         const actionsBar = document.querySelector('.actions-bar');
